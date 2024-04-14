@@ -83,6 +83,7 @@ def searchVideoByKeyword(scrollPage, keyword, log):
     finally:
         # Clean up: close the browser window
         driver.quit()
+        return [tags,video_link]
 
 def searchUserByKeyword(scrollPage, keyword, log):
     driver = driverSetup()
@@ -116,3 +117,4 @@ def searchUserByKeyword(scrollPage, keyword, log):
     finally:
         # Cleanup: close the browser window
         driver.quit()
+        return [nickname,douyin_id]
