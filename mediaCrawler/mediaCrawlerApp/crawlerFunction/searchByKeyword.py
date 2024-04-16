@@ -19,13 +19,11 @@ def scroll_page(driver, load_times):
         # Random wait time between 3 and 7 seconds
         time.sleep(random.uniform(3, 7))
 
-def driverSetup():
+def driverSetup(user_data_dir):
     # Assuming 'driver' is an already initialized WebDriver object
     # Example usage: scroll_page(driver, 5) # Scrolls the page 5 times
 
     # User data and Chrome driver path
-    user_data_dir = r'/Users/kaifan/Library/Application Support/Google/Chrome'
-    chrome_driver_path = r'/usr/local/bin/chromedriver'
 
     # Configuration of Chrome options
     chrome_options = Options()
@@ -37,16 +35,13 @@ def driverSetup():
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
     chrome_options.add_argument("--headless")  # Run in headless mode
 
-    # Setting up the ChromeDriver service
-    service = Service(executable_path=chrome_driver_path)
-
     # Initializing the WebDriver
     driver = webdriver.Chrome()
     return driver
 
 # Functionality to get video by keyword
 def searchVideoByKeyword(scrollPage, keyword, log):
-    driver = driverSetup()
+    driver = driverSetup(r'/Users/kaifan/Library/Application Support/Google/Chrome')
     scroll_page(driver, scrollPage)
 
     try:
@@ -86,7 +81,7 @@ def searchVideoByKeyword(scrollPage, keyword, log):
         return [tags,video_link]
 
 def searchUserByKeyword(scrollPage, keyword, log):
-    driver = driverSetup()
+    driver = driverSetup(r'/Users/kaifan/Library/Application Support/Google/Chrome')
     try:
         # Record start time
         start_time = time.time()
