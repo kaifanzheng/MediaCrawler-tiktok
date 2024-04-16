@@ -26,7 +26,7 @@ service = Service(executable_path=chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # 访问指定网址
-live_url = "https://live.douyin.com/690127016627?is_aweme_tied=0"
+live_url = "https://live.douyin.com/92671200827?column_type=single&is_aweme_tied=0&search_id=2024041522444608FD86F712A39222C5F7&search_result_id=7358060145957539106"
   # 此处将网址定义为变量，以便于在代码编辑器中修改
 driver.get(live_url)
 
