@@ -8,6 +8,11 @@ import time
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.action_chains import ActionChains
 import random
+import math 
+
+num_scrolls = 0 #计算翻页的次数
+# 初始化一个全局变量来跟踪已处理的评论数量
+last_processed_comment_count = 0
 
 # 您个人的 Chrome 用户数据目录和ChromeDriver路径
 user_data_dir = r'/Users/kaifan/Library/Application Support/Google/Chrome'
@@ -26,24 +31,35 @@ chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64
 service = Service(executable_path=chrome_driver_path)
 driver = webdriver.Chrome()
 
-def scroll_page(driver, load_times):
-    """滚动页面以加载更多内容
+def scroll_comments_section(driver):
+    # 等待评论列表容器加载完成
+    comments_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "div.HV3aiR5J.comment-mainContent.iV2CcAAV")))
+    # 每次滚动向下移动1000像素
+    driver.execute_script(
+    'arguments[0].scrollTop = arguments[0].scrollTop + 3200;', 
+    comments_container
+        )
+    # 每次滚动之间等待3到7秒的随机时间
+    time.sleep(random.randint(3, 7))
 
-    Args:
-    driver: WebDriver实例。
-    load_times: 要加载的次数。
+
+def calculate_pagination(driver):
     """
-    for _ in range(load_times):
-        # 滚动到页面底部
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        print("执行加载")
-        # 随机等待时间，介于3到7秒之间
-        time.sleep(random.uniform(3, 7))
-
-# 访问目标网址
-driver.get("https://www.douyin.com/discover?modal_id=7356196656422866239")
-
-
+    计算需要翻页的次数，并作为整数返回。
+    """
+    try:
+        total_comments_text = driver.find_element(By.CSS_SELECTOR, "span.qx5s_hbj").text
+        total_comments = int(total_comments_text.split('(')[1].split(')')[0])
+        print(f"全部评论数量: {total_comments}")
+        
+        comments_per_page = 19
+        total_pages = math.ceil(total_comments / comments_per_page)
+        print(f"需要翻页的次数: {total_pages}")
+        return total_pages
+        
+    except Exception as e:
+        print(f"获取评论总数时出现错误: {e}")
+        return 0
 def close_popup(driver):
     """
     Function to close the popup window in the Douyin page.
@@ -61,33 +77,29 @@ def close_popup(driver):
     except Exception as e:
         print(f"An error occurred while trying to close the popup: {e}")
 
-# 添加您从浏览器中导出的 Cookies
-cookies = [
-    {'name': 'FOLLOW_LIVE', 'value': '%22MS4wLjABAAAAgUJNYCU4jQB54_461ijiGGqVCmqsWJaQAgwdnXHOo3hrWdNxSK5D5pFmLXj0vwRl%2F1712851200000%2F0%2F1712846712931%2F0%22', 'domain': '.douyin.com', 'path': '/'},
-    {'name': 'FORCE_LOGIN', 'value': '%7B%22videoConsumedRemainSeconds%22%3A180%2C%22isForcePopClose%22%3A1%7D', 'domain': '.douyin.com', 'path': '/'},
-    {'name': 'IsDouyinActive', 'value': 'true', 'domain': '.douyin.com', 'path': '/'}
-]
+# 为用户编写一个Selenium脚本的函数，用于点击评论区域的登录遮罩关闭按钮。
+def click_comment_login_mask(driver):
+    try:
+        # 等待遮罩的关闭按钮出现
+        close_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, ".related-video-card-login-guide__footer-close"))
+        )
+        
+        # 点击关闭按钮
+        close_button.click()
+        print("已点击评论区的登录遮罩关闭按钮。")
+        
+    except Exception as e:
+        print(f"不执行关闭登录遮罩")
 
-#for cookie in cookies:
-    #driver.add_cookie(cookie)
+def click_comments_button(driver):
+    comment_button_selector = "#sliderVideo > div.UsWJJZhB.playerContainer.hide-animation-if-not-suport-gpu.jjWFxVjy.dOluRUuw > div.O8onIiBq.slider-video > div > div.MarSXdLE.immersive-player-switch-on-hide-interaction-area.nRO8QGrO.positionBox.hideChangeVideo > div.jkfSVWLT > div:nth-child(3) > div"
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, comment_button_selector))).click()
+    print("点击评论")
+    time.sleep(2)
 
-# 刷新页面以应用 Cookies
-driver.refresh()
-time.sleep(3)  # 等待一段时间，确保Cookies被正确应用
-close_popup(driver)
-
-# 等待评论按钮可点击
-comment_button_selector = "#sliderVideo > div.UsWJJZhB.playerContainer.hide-animation-if-not-suport-gpu.jjWFxVjy.dOluRUuw > div.O8onIiBq.slider-video > div > div.MarSXdLE.immersive-player-switch-on-hide-interaction-area.nRO8QGrO.positionBox.hideChangeVideo > div.jkfSVWLT > div:nth-child(3) > div"
-WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, comment_button_selector))).click()
-time.sleep(2)
-scroll_page(driver, 3)
-time.sleep(10)  # 给页面评论部分加载的时间
-
-# 模拟鼠标移动到屏幕右侧的10%，然后向下滚动20秒
-
-time.sleep(1)
-# 现在提取评论的内容
 def scrape_user_info_and_comments(driver):
+    global last_processed_comment_count  # 引用全局变量
     # 获取当前页面的HTML内容
     page_html = driver.page_source
     
@@ -96,9 +108,11 @@ def scrape_user_info_and_comments(driver):
     
     # 找到所有评论区域的div
     comments_divs = soup.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["VjrdhTqP"])
-    
+    print(f"当前加载的评论数量: {len(comments_divs)}")
     # 遍历所有评论以找到需要的信息
-    for comment_div in comments_divs:
+
+    new_comments = comments_divs[last_processed_comment_count:] 
+    for comment_div in new_comments:
         # 获取评论文本
         comment_text = comment_div.find("div", class_="LvAtyU_f").get_text(strip=True) if comment_div.find("div", class_="LvAtyU_f") else ""
         
@@ -114,7 +128,25 @@ def scrape_user_info_and_comments(driver):
         print(f"用户评论: {comment_text}")
         print(f"用户主页链接: {user_profile_link}")
         print(f"用户IP: {user_ip}")
-        print("---------------------------------------------------")
-scrape_user_info_and_comments(driver)
+    last_processed_comment_count += len(new_comments)
+
+
+
+def scrape_user_info_from_video(driver,url):
+    driver.get(url)
+    time.sleep(3)  
+    close_popup(driver)
+    click_comments_button(driver)
+    click_comment_login_mask(driver)
+    num_scrolls = calculate_pagination(driver)
+    for current_scroll in range(num_scrolls):
+        remaining_scrolls = num_scrolls - current_scroll - 1  # 计算剩余翻页次数
+        print(f"当前加载次数: {current_scroll + 1}, 剩余加载次数: {remaining_scrolls}")
+        scroll_comments_section(driver)  # 假设这个函数用来滚动到评论区的下一部分
+        time.sleep(3)  # 给页面评论部分加载的时间
+        scrape_user_info_and_comments(driver)  # 爬取并打印当前页的评论
+    driver.quit()
 # 关闭浏览器
-driver.quit()
+
+#scrape_user_info_from_video(driver,"https://www.douyin.com/discover?modal_id=7356196656422866239")
+
