@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .crawlerFunction.searchByKeyword import searchUserByKeyword, searchVideoByKeyword
 from .models import TikTokUser, LiveStreamVideo, SimilarUser
+from .repository import *
 # Create your tests here.
 # class SearchByKeywordTest(TestCase):
 #     def test_search_user(self):
@@ -53,4 +54,15 @@ class TikTokUserTest(TestCase):
         similar_user.save()
         retrieved_similar_user = SimilarUser.objects.get(name="Similar User")
         self.assertEqual(retrieved_similar_user.tiktok_user, tiktok_user)
-
+    
+    def test_get_tiktok_username (self):
+        scrapeTikTikUsers()
+        all_user = TikTokUser.objects.all()
+        print(all_user)
+        self.assertTrue(len(all_user) > 0)
+    def test_search_silmilar_users (self):
+        scrapeTikTikUsers()
+        generateSimilarUsers()
+        all_user = SimilarUser.objects.all()
+        print(all_user)
+        self.assertTrue(len(all_user) > 0)

@@ -40,8 +40,8 @@ def driverSetup(user_data_dir):
     return driver
 
 # Functionality to get video by keyword
-def searchVideoByKeyword(scrollPage, keyword, log):
-    driver = driverSetup(r'/Users/kaifan/Library/Application Support/Google/Chrome')
+def searchVideoByKeyword(scrollPage, keyword, userdata,log):
+    driver = driverSetup(userdata)
     scroll_page(driver, scrollPage)
 
     try:
@@ -80,8 +80,8 @@ def searchVideoByKeyword(scrollPage, keyword, log):
         driver.quit()
         return [tags,video_link]
 
-def searchUserByKeyword(scrollPage, keyword, log):
-    driver = driverSetup(r'/Users/kaifan/Library/Application Support/Google/Chrome')
+def searchUserByKeyword(scrollPage, keyword, userdata,log):
+    driver = driverSetup(userdata)
     try:
         # Record start time
         start_time = time.time()
