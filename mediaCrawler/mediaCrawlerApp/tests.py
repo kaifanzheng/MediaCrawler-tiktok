@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .crawlerFunction.searchByKeyword import searchUserByKeyword, searchVideoByKeyword
-from .crawlerFunction.DY_liveScraper import get_live_user_name
+from .models import TikTokUser, LiveStreamVideo, SimilarUser
 # Create your tests here.
 # class SearchByKeywordTest(TestCase):
 #     def test_search_user(self):
@@ -8,9 +8,49 @@ from .crawlerFunction.DY_liveScraper import get_live_user_name
 
 #     def test_search_video(self):
 #         searchVideoByKeyword(3, "servo motor", True)
-class LiveScraperTest (TestCase):
-    def test_get_live_comment_below_user_name(self):
 
-        queue = get_live_user_name("https://live.douyin.com/498526330292")
-        print (list(queue.queue))
-        self.assertTrue(queue.qsize()>0)
+class TikTokUserTest(TestCase):
+    def test_add_tiktokUser_to_database(self):
+        user = TikTokUser(name="John Doe", ip="192.168.1.1")
+        user.save()
+
+        all_users = TikTokUser.objects.all()
+        self.assertTrue(len(all_users) == 1)
+        self.assertTrue(all_users[0].name == "John Doe")
+    
+    def test_remove_tiktokUser_from_database(self):
+        user = TikTokUser(name="John Doe", ip="192.168.1.1")
+        user.save()
+        
+        delete_user = TikTokUser.objects.get(mutable_id = user.mutable_id)
+        delete_user.delete()
+
+        all_users = TikTokUser.objects.all()
+        self.assertTrue(len(all_users) == 0)
+
+    def test_update_tiktokUser_to_database(self):
+        user = TikTokUser(name="John Doe", ip="192.168.1.1")
+        user.save()
+
+        update_user = TikTokUser.objects.get(mutable_id = user.mutable_id)
+        update_user.name = "kai"
+        update_user.save()
+
+        all_users = TikTokUser.objects.all()
+        self.assertTrue(len(all_users) == 1)
+        self.assertTrue(all_users[0].name == "kai")
+
+    def test_add_similarUser_to_tiktokUser(self):
+        tiktok_user = TikTokUser(name="Test User", ip="192.168.1.1")
+        tiktok_user.save()
+
+        similar_user = SimilarUser(
+            tiktok_user = tiktok_user,
+            name="Similar User",
+            url="https://example.com",
+            ip="192.168.1.2"
+        )
+        similar_user.save()
+        retrieved_similar_user = SimilarUser.objects.get(name="Similar User")
+        self.assertEqual(retrieved_similar_user.tiktok_user, tiktok_user)
+
