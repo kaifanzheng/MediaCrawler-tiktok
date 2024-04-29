@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 import time
 import random
 
+chrome_driver_path = r'C:\Users\Administrator\Desktop\chromedriver-win64\chromedriver.exe'
+
 def scroll_page(driver, load_times):
     """Scrolls the page to load more content.
 
@@ -36,7 +38,10 @@ def driverSetup(user_data_dir):
     chrome_options.add_argument("--headless")  # Run in headless mode
 
     # Initializing the WebDriver
-    driver = webdriver.Chrome()
+    service = Service(executable_path=chrome_driver_path)
+
+# 初始化webdriver
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
 # Functionality to get video by keyword

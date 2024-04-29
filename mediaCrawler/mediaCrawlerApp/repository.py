@@ -17,8 +17,8 @@ def get_ip_address():
         s.close()
     return IP
 
-def scrapeTikTikUsers():
-    tikTokUserQueue = get_live_user_name("https://live.douyin.com/135438115353",userdata)
+def scrapeTikTikUsers(url):
+    tikTokUserQueue = get_live_user_name(url,userdata)
 
     while True:
         if tikTokUserQueue.empty():

@@ -56,12 +56,12 @@ class TikTokUserTest(TestCase):
         self.assertEqual(retrieved_similar_user.tiktok_user, tiktok_user)
     
     def test_get_tiktok_username (self):
-        scrapeTikTikUsers()
+        scrapeTikTikUsers("https://live.douyin.com/63592101250")
         all_user = TikTokUser.objects.all()
         print(all_user)
         self.assertTrue(len(all_user) > 0)
     def test_search_silmilar_users (self):
-        scrapeTikTikUsers()
+        scrapeTikTikUsers("https://live.douyin.com/63592101250")
         generateSimilarUsers()
         all_user = SimilarUser.objects.all()
         print(all_user)
