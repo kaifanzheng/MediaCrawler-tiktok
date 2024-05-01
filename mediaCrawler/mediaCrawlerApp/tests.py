@@ -60,9 +60,17 @@ class TikTokUserTest(TestCase):
         all_user = TikTokUser.objects.all()
         print(all_user)
         self.assertTrue(len(all_user) > 0)
+        
     def test_search_silmilar_users (self):
         scrapeTikTikUsers("https://live.douyin.com/63592101250")
         generateSimilarUsers()
+        all_user = SimilarUser.objects.all()
+        print(all_user)
+        self.assertTrue(len(all_user) > 0)
+
+    def test_search_silmilar_users_multithread (self):
+        scrapeTikTikUsers("https://live.douyin.com/15826879476")
+        generateSimilarUsers_muiltithread()
         all_user = SimilarUser.objects.all()
         print(all_user)
         self.assertTrue(len(all_user) > 0)

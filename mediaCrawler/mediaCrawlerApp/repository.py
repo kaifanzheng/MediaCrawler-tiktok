@@ -2,6 +2,9 @@ from .crawlerFunction.searchByKeyword import searchUserByKeyword, searchVideoByK
 from .models import TikTokUser, LiveStreamVideo, SimilarUser
 from .crawlerFunction.DY_liveScraper import get_live_user_name
 import socket
+from.crawlerFunction.generate_similar_user_multithread import generate_similar_user_multithread
+import queue
+
 
 userdata = r'C:\Users\Administrator\AppData\Local\Google\Chrome\User Data'
 
@@ -42,7 +45,24 @@ def generateSimilarUsers():
         )
         similar_user.save()
 
+def generateSimilarUsers_muiltithread():
+    #TODO
+    all_users = TikTokUser.objects.all()
+    user_queue = queue.Queue()
+# 将 all_users 存入队列
+    for user in all_users:
+        user_queue.put(user)
     
+    searchResult = generate_similar_user_multithread(user_queue,5)
+    print(searchResult)
+    similar_user = SimilarUser(
+            tiktok_user = user,
+            user_id = searchResult[1],
+            name= searchResult[0],
+            url="https://example.com",
+            ip="192.168.1.2"
+        )
+    similar_user.save()
 
 def findMatchTiktokUser():
     #TODO
