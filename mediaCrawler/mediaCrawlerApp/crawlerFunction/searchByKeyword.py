@@ -87,6 +87,8 @@ def searchVideoByKeyword(scrollPage, keyword, userdata,log):
 
 def searchUserByKeyword(scrollPage, keyword, userdata,log):
     driver = driverSetup(userdata)
+    nicknames = []
+    DY_ids = []
     try:
         # Record start time
         start_time = time.time()
@@ -108,6 +110,8 @@ def searchUserByKeyword(scrollPage, keyword, userdata,log):
             douyin_id = [elem.text for elem in douyin_id_elements if elem.text.startswith('抖音号')][0].replace('抖音号: ', '')
             if(log == True):
                 print(f'Nickname: {nickname}, Douyin ID: {douyin_id}')
+            nicknames.append(nickname)
+            DY_ids.append(douyin_id)
 
         # Record end time
         end_time = time.time()
@@ -117,4 +121,4 @@ def searchUserByKeyword(scrollPage, keyword, userdata,log):
     finally:
         # Cleanup: close the browser window
         driver.quit()
-        return [nickname,douyin_id]
+        return [nicknames,DY_ids]

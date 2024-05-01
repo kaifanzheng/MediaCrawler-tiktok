@@ -74,6 +74,8 @@ def display_comment(comment):
         print("被反爬")
     except Exception as e:
         print("评论处理异常", e)
+
+#method that project queue        
 def get_user_queue():
     return user_name_queue
 

@@ -9,6 +9,7 @@ import random
 import string
 import os
 import tempfile
+from .DY_liveScraper import get_user_queue
 
 
 user_data_dir = r'C:\Users\Administrator\AppData\Local\Google\Chrome\User Data'
@@ -18,23 +19,6 @@ def scroll_page(driver, load_times):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(random.uniform(3, 7))
 
-def searchUserByKeyword(username, driver, results):
-    try:
-        start_time = time.time()
-        driver.get(f"https://www.douyin.com/search/{username}?type=user")
-        scroll_page(driver, 3)
-        driver.implicitly_wait(10)
-        users = driver.find_elements(By.XPATH, '//li[contains(@class, "MgWTwktU")]')
-        for user in users:
-            nickname = user.find_element(By.XPATH, './/div[contains(@class, "_HB0BapG")]/p').text
-            douyin_id_elements = user.find_elements(By.XPATH, './/div[contains(@class, "H7Xy0nwI")]/span')
-            douyin_id = [elem.text for elem in douyin_id_elements if elem.text.startswith('抖音号')][0].replace('抖音号: ', '')
-            results.append(f'Nickname: {nickname}, Douyin ID: {douyin_id}')
-        end_time = time.time()
-        print(f"Search for {username} completed in {end_time - start_time} seconds.")
-        return results
-    except Exception as e:
-        print(f"Error during search for {username}: {str(e)}")
 
 def get_random_user_agent():
     # 列表中可以添加更多的 User-Agent
@@ -61,15 +45,55 @@ def driver_setup(user_data_dir):
     service = Service(executable_path=chrome_driver_path)
     return webdriver.Chrome(service=service, options=chrome_options)
 
-def worker_thread(queue, results):
-    driver = driver_setup(user_data_dir)
+
+def searchUserByKeyword(scrollPage, keyword, userdata,log):
+    driver = driver_setup(userdata)
+    nicknames = []
+    DY_ids = []
     try:
-        while not queue.empty():
-            username = queue.get()
-            searchUserByKeyword(username, driver, results)
-            queue.task_done()
+        # Record start time
+        start_time = time.time()
+
+        # Construct search result URL and visit
+        driver.get(f"https://www.douyin.com/search/{keyword}?type=user")
+        
+        scroll_page(driver,scrollPage)
+        # Wait for the page to load completely, adjust wait time as necessary
+        driver.implicitly_wait(10)
+
+        # Extract all users' nicknames and Douyin IDs
+        users = driver.find_elements(By.XPATH, '//li[contains(@class, "MgWTwktU")]')
+        for user in users:
+            # Nickname
+            nickname = user.find_element(By.XPATH, './/div[contains(@class, "_HB0BapG")]/p').text
+            # Douyin ID
+            douyin_id_elements = user.find_elements(By.XPATH, './/div[contains(@class, "H7Xy0nwI")]/span')
+            douyin_id = [elem.text for elem in douyin_id_elements if elem.text.startswith('抖音号')][0].replace('抖音号: ', '')
+            if(log == True):
+                print(f'Nickname: {nickname}, Douyin ID: {douyin_id}')
+            nicknames.append(nickname)
+            DY_ids.append(douyin_id)
+
+        # Record end time
+        end_time = time.time()
+        if(log == True):
+            print(f"Program run time: {end_time - start_time} seconds")
+
     finally:
+        # Cleanup: close the browser window
         driver.quit()
+        return [nicknames,DY_ids]
+
+def worker_thread():
+    username_quene = get_user_queue()
+    try:
+        while not username_quene.empty():
+            username = username_quene.get_nowait()
+            user = TikTokUser.objects.get(name=username)
+            result = searchUserByKeyword(3,username,user_data_dir,True)
+            for i in range(len(result[0])):
+                
+    finally:
         print("Driver for thread closed.")
 
 
