@@ -20,7 +20,16 @@ def scroll_page(driver, load_times):
         print("Loading executed")
         # Random wait time between 3 and 7 seconds
         time.sleep(random.uniform(3, 7))
-
+def get_random_user_agent():
+    # 列表中可以添加更多的 User-Agent
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Safari/605.1.15",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",
+        "Mozilla/5.0 (iPad; CPU OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1"
+    ]
+    return random.choice(user_agents)
 def driverSetup(user_data_dir):
     # Assuming 'driver' is an already initialized WebDriver object
     # Example usage: scroll_page(driver, 5) # Scrolls the page 5 times
@@ -34,7 +43,9 @@ def driverSetup(user_data_dir):
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins-discovery")
     chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
+    user_agent = get_random_user_agent()
+
+    chrome_options.add_argument(f"user-agent={user_agent}")
     chrome_options.add_argument("--headless")  # Run in headless mode
 
     # Initializing the WebDriver
@@ -86,11 +97,14 @@ def searchVideoByKeyword(scrollPage, keyword, userdata,log):
         return [tags,video_link]
 
 def searchUserByKeyword(scrollPage, keyword, userdata,log):
+    print("Start searching user by keyword1")
     driver = driverSetup(userdata)
     nicknames = []
     DY_ids = []
+
     try:
         # Record start time
+        print("Start searching user by keyword")
         start_time = time.time()
 
         # Construct search result URL and visit

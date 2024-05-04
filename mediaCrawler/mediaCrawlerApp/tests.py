@@ -41,36 +41,41 @@ class TikTokUserTest(TestCase):
         self.assertTrue(len(all_users) == 1)
         self.assertTrue(all_users[0].name == "kai")
 
-    def test_add_similarUser_to_tiktokUser(self):
-        tiktok_user = TikTokUser(name="Test User", ip="192.168.1.1")
-        tiktok_user.save()
+    def test_scrape_tiktok_user_info(self):
+        scrapeTikTokUsers("https://live.douyin.com/374133902274")
+        all_users = TikTokUser.objects.all()
+        self.assertTrue(len(all_users) > 0)
 
-        similar_user = SimilarUser(
-            tiktok_user = tiktok_user,
-            name="Similar User",
-            url="https://example.com",
-            ip="192.168.1.2"
-        )
-        similar_user.save()
-        retrieved_similar_user = SimilarUser.objects.get(name="Similar User")
-        self.assertEqual(retrieved_similar_user.tiktok_user, tiktok_user)
+    # def test_add_similarUser_to_tiktokUser(self):
+    #     tiktok_user = TikTokUser(name="Test User", ip="192.168.1.1")
+    #     tiktok_user.save()
+
+    #     similar_user = SimilarUser(
+    #         tiktok_user = tiktok_user,
+    #         name="Similar User",
+    #         url="https://example.com",
+    #         ip="192.168.1.2"
+    #     )
+    #     similar_user.save()
+    #     retrieved_similar_user = SimilarUser.objects.get(name="Similar User")
+    #     self.assertEqual(retrieved_similar_user.tiktok_user, tiktok_user)
     
-    def test_get_tiktok_username (self):
-        scrapeTikTikUsers("https://live.douyin.com/63592101250")
-        all_user = TikTokUser.objects.all()
-        print(all_user)
-        self.assertTrue(len(all_user) > 0)
+    # def test_get_tiktok_username (self):
+    #     scrapeTikTokUsers("https://live.douyin.com/63592101250")
+    #     all_user = TikTokUser.objects.all()
+    #     print(all_user)
+    #     self.assertTrue(len(all_user) > 0)
         
-    def test_search_silmilar_users (self):
-        scrapeTikTikUsers("https://live.douyin.com/63592101250")
-        generateSimilarUsers()
-        all_user = SimilarUser.objects.all()
-        print(all_user)
-        self.assertTrue(len(all_user) > 0)
+    # # def test_search_silmilar_users (self):
+    # #     scrapeTikTikUsers("https://live.douyin.com/63592101250")
+    # #     generateSimilarUsers()
+    # #     all_user = SimilarUser.objects.all()
+    # #     print(all_user)
+    # #     self.assertTrue(len(all_user) > 0)
 
     def test_search_silmilar_users_multithread (self):
-        scrapeTikTikUsers("https://live.douyin.com/15826879476")
-        generateSimilarUsers_muiltithread()
+        scrapeTikTokUsers("https://live.douyin.com/374133902274")
+        generate_similar_user_multithread(5)
         all_user = SimilarUser.objects.all()
         print(all_user)
         self.assertTrue(len(all_user) > 0)

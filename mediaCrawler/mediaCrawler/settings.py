@@ -76,10 +76,20 @@ WSGI_APPLICATION = 'mediaCrawler.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'tiktok',
+        'USER': 'postgres',
+        'PASSWORD': '666666',  # 确保这里的密码是正确的
+        'HOST': 'localhost',
+        'PORT': '5432',  # 确保端口号正确，与您的数据库实际使用的端口号相匹配
+        'OPTIONS': {
+            'options': '-c search_path=django,public'
+        },
+        'CONN_MAX_AGE': 0,  # 使用连接池时，设为 0
+        
     }
 }
+
 
 
 # Password validation
