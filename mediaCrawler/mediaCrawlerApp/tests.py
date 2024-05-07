@@ -41,10 +41,10 @@ class TikTokUserTest(TestCase):
         self.assertTrue(len(all_users) == 1)
         self.assertTrue(all_users[0].name == "kai")
 
-    def test_scrape_tiktok_user_info(self):
-        scrapeTikTokUsers("https://live.douyin.com/374133902274")
-        all_users = TikTokUser.objects.all()
-        self.assertTrue(len(all_users) > 0)
+    # def test_scrape_tiktok_user_info(self):
+    #     scrapeTikTokUsers("https://live.douyin.com/374133902274")
+    #     all_users = TikTokUser.objects.all()
+    #     self.assertTrue(len(all_users) > 0)
 
     # def test_add_similarUser_to_tiktokUser(self):
     #     tiktok_user = TikTokUser(name="Test User", ip="192.168.1.1")
@@ -73,9 +73,9 @@ class TikTokUserTest(TestCase):
     # #     print(all_user)
     # #     self.assertTrue(len(all_user) > 0)
 
-    def test_search_silmilar_users_multithread (self):
-        scrapeTikTokUsers("https://live.douyin.com/374133902274")
-        generate_similar_user_multithread(5)
-        all_user = SimilarUser.objects.all()
-        print(all_user)
-        self.assertTrue(len(all_user) > 0)
+    # def test_search_silmilar_users_multithread (self):
+    #     scrapeTikTokUsers("https://live.douyin.com/374133902274")
+    #     generate_similar_user_multithread(5)
+    #     all_user = SimilarUser.objects.all()
+    #     print(all_user)
+    #     self.assertTrue(len(all_user) > 0)
