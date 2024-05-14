@@ -6,7 +6,7 @@ class TikTokUser(models.Model):
     name = models.CharField(max_length=255)
     ip = models.GenericIPAddressField()
     mutable_id = models.CharField(max_length=50, unique=True, blank=True, null=True)
-
+    is_searched = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     

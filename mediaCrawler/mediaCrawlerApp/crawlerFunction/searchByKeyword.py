@@ -5,7 +5,8 @@ from selenium.webdriver.common.by import By
 import time
 import random
 
-chrome_driver_path = r'C:\Users\Administrator\Desktop\chromedriver-win64\chromedriver.exe'
+# chrome_driver_path = r'C:\Users\Administrator\Desktop\chromedriver-win64\chromedriver.exe'
+chrome_driver_path = r'/Users/kaifan/Library/Application Support/Google/Chrome'
 
 def scroll_page(driver, load_times):
     """Scrolls the page to load more content.
@@ -30,34 +31,20 @@ def get_random_user_agent():
         "Mozilla/5.0 (iPad; CPU OS 13_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Mobile/15E148 Safari/604.1"
     ]
     return random.choice(user_agents)
-def driverSetup(user_data_dir):
-    # Assuming 'driver' is an already initialized WebDriver object
-    # Example usage: scroll_page(driver, 5) # Scrolls the page 5 times
 
-    # User data and Chrome driver path
-
-    # Configuration of Chrome options
+def configure_browser(user_data_dir):
     chrome_options = Options()
     chrome_options.add_argument(f"user-data-dir={user_data_dir}")
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins-discovery")
     chrome_options.add_argument("--start-maximized")
-    user_agent = get_random_user_agent()
-
-    chrome_options.add_argument(f"user-agent={user_agent}")
-    chrome_options.add_argument("--headless")  # Run in headless mode
-
-    # Initializing the WebDriver
-    service = Service(executable_path=chrome_driver_path)
-
-# 初始化webdriver
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    return driver
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36")
+    return webdriver.Chrome()
 
 # Functionality to get video by keyword
 def searchVideoByKeyword(scrollPage, keyword, userdata,log):
-    driver = driverSetup(userdata)
+    driver = configure_browser(userdata)
     scroll_page(driver, scrollPage)
 
     try:
@@ -96,9 +83,9 @@ def searchVideoByKeyword(scrollPage, keyword, userdata,log):
         driver.quit()
         return [tags,video_link]
 
-def searchUserByKeyword(scrollPage, keyword, userdata,log):
+def searchUserByKeyword(scrollPage, keyword,log):
     print("Start searching user by keyword1")
-    driver = driverSetup(userdata)
+    driver = configure_browser(chrome_driver_path)
     nicknames = []
     DY_ids = []
 

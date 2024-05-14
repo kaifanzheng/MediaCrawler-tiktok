@@ -8,6 +8,7 @@ from selenium.common.exceptions import StaleElementReferenceException, TimeoutEx
 import time
 import queue
 
+chrome_driver_path = r'/Users/kaifan/Library/Application Support/Google/Chrome'
 # 创建一个先进先出的队列
 user_name_queue = queue.Queue(maxsize=100000)  # maxsize是可选参数，用来设置队列可以容纳的最大元素数量，0或负值表示无大小限制
 
@@ -80,8 +81,8 @@ def get_user_queue():
     return user_name_queue
 
 # 主函数
-def get_live_user_name(live_url,user_data_dir):
-    driver = configure_browser(user_data_dir)
+def get_live_user_name(live_url):
+    driver = configure_browser(chrome_driver_path)
     driver.get(live_url)
     close_popup(driver)
     fetch_comments(driver)
