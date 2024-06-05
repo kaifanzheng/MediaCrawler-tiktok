@@ -39,10 +39,13 @@ def close_popup(driver):
         print("没有检测到弹窗，继续执行程序。")
 
 def setFlagToStop():
+    global stopScrapperFlag
     stopScrapperFlag = 1
+def setFlagToStart():
+    global stopScrapperFlag
+    stopScrapperFlag = 0
 
 def fetch_comments(driver):
-    stopScrapperFlag = 0
     last_seen_comment_id = None
     start_time = time.time()
 

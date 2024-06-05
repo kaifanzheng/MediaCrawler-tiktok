@@ -1,12 +1,19 @@
 from django.shortcuts import render
-from .crawlerFunction.DY_liveScraper import setFlagToStop
+from .crawlerFunction.DY_liveScraper import setFlagToStop,setFlagToStart
 from django.http import JsonResponse
-from .repository import scrapeTikTokUsers, generateSimilarUsers,findMatchTiktokUser,emptyData,getReuslts,setUrl
+from .repository import *
 import json
+import threading
+
+scraperRepo = TikTokUserScraper()
 
 def start_scrapper(request):
     if request.method == 'POST':
-        scrapeTikTokUsers()
+        setFlagToStart()
+        def run_scraper():
+            scraperRepo.scrapeTikTokUsers()
+
+        threading.Thread(target=run_scraper).start()
         return JsonResponse({'status': 'success', 'message': 'Scrapper stopped.'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
 
@@ -18,11 +25,11 @@ def pulse_scrapper(request):
 
 def stop_scrapper(request):
     if request.method == 'POST':
-        generateSimilarUsers()
-        findMatchTiktokUser()
-
-        results = getReuslts()
-        emptyData()
+        setFlagToStop()
+        scraperRepo.generateSimilarUsers()
+        scraperRepo.findMatchTiktokUser()
+        results = scraperRepo.getReuslts()
+        scraperRepo.emptyData()
         return JsonResponse({'status': 'success', 'message': 'Scrapper stopped.', 'data': results})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
 
@@ -31,7 +38,7 @@ def set_url(request):
         try:
             data = json.loads(request.body)
             url= data.get('url', '')
-            setUrl(url)
+            scraperRepo.setUrl(url)
             
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'}, status=400)
