@@ -1,0 +1,227 @@
+body {
+  background-color: #000000; /* 背景颜色为黑色 */
+  color: #b9b9b9; /* 字体颜色为白偏灰 */
+  font-family: 'Courier New', Courier, monospace; /* 字体风格为复古风格 */
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 全局字体加粗 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container, .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.dashboard-container {
+  width: 100%; /* 保持与 main-container 一致 */
+  max-width: 1200px;
+  border: 4px solid #b9b9b9; /* 外边框颜色为白偏灰，并加粗 */
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #b9b9b9; /* 仿像素风 */
+  image-rendering: pixelated; /* 像素风 */
+}
+
+.row-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* 确保子元素的高度一致 */
+  width: 100%;
+  margin-bottom: 20px;
+  border-bottom: 4px solid #b9b9b9; /* 行之间的分割线，并加粗 */
+  padding-bottom: 20px;
+  background-color: #b9b9b9; /* 仿像素风 */
+  image-rendering: pixelated; /* 像素风 */
+}
+
+.chart-container {
+  width: 48%; /* 调整宽度以并排显示 */
+  background-color: #b9b9b9; /* 仿像素风 */
+  border: 4px solid #b9b9b9; /* 边框颜色为白偏灰，并加粗 */
+  padding: 10px;
+  image-rendering: pixelated; /* 像素风 */
+  text-align: center; /* 居中文本 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 300px; /* 确保高度一致 */
+}
+
+input, button {
+  margin: 10px;
+  padding: 10px;
+  font-size: 16px;
+  color: #000000; /* 输入框和按钮内的文字颜色为黑色 */
+  background-color: #b9b9b9; /* 按钮背景颜色 */
+  border: 4px solid #b9b9b9; /* 按钮边框颜色，并加粗 */
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  justify-content: space-between; /* 使用 space-between 确保按钮均匀分布 */
+  width: 150px; /* 调整按钮容器的宽度 */
+  height: 300px; /* 确保按钮容器的高度与cracking-pointer一致 */
+  background-color: #b9b9b9; /* 背景颜色为灰白色 */
+  border: 2px solid #000000; /* 边框颜色为黑色 */
+  box-sizing: border-box; /* 包含内边距和边框在内的总宽度和高度 */
+  padding: 10px; /* 增加内边距 */
+}
+
+button {
+  background-color: #b9b9b9; /* 按钮背景颜色 */
+  color: #000000; /* 按钮文字颜色 */
+  border: 2px solid #000000; /* 按钮边框颜色 */
+  cursor: pointer;
+  padding: 10px 0; /* 调整按钮内边距 */
+  border-radius: 0; /* 取消圆角，像素风 */
+  font-size: 16px; /* 调整字体大小 */
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+  text-align: center; /* 居中文本 */
+  flex-grow: 1; /* 确保按钮在容器中均匀分布 */
+  margin: 5px 0; /* 按钮间距 */
+}
+button:first-child {
+  margin-top: 0; /* 移除第一个按钮的顶部间距 */
+}
+
+button:last-child {
+  margin-bottom: 0; /* 移除最后一个按钮的底部间距 */
+}
+
+
+
+.info-box, .random-text-box {
+  background-color: #b9b9b9; /* 背景颜色为灰白色 */
+  color: #000000; /* 字体颜色为黑色 */
+  padding: 20px;
+  border: 4px solid #000000; /* 边框颜色为黑色，并加粗 */
+  width: 48%; /* 调整宽度以并排显示 */
+  max-width: 600px;
+  position: relative;
+  overflow-y: auto;
+  max-height: 400px;
+  margin-bottom: 20px;
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+}
+
+.info-title {
+  position: sticky;
+  top: 0;
+  background-color: #b9b9b9; /* 标题背景颜色为灰白色 */
+  padding: 10px 0;
+  text-align: center;
+  border-bottom: 4px solid #000000; /* 边框颜色为黑色，并加粗 */
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+}
+
+.usernames-list, .random-text-list {
+  margin-top: 20px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #b9b9b9; /* 列表背景颜色为灰白色 */
+  color: #000000; /* 列表字体颜色为黑色 */
+  padding: 10px;
+  border: 4px solid #000000; /* 边框颜色为黑色，并加粗 */
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+}
+.main-container {
+  width: 95%; /* 增加宽度 */
+  max-width: 1200px;
+  margin: 0 auto; /* 水平居中 */
+}
+
+
+.url-input {
+  width: 90%; /* 确保 URL 输入框与上面的容器宽度一致 */
+  padding: 10px;
+  font-size: 16px;
+  color: #000000; /* 输入框文字颜色为黑色 */
+  background-color: #b9b9b9;
+  border: 4px solid #000000; /* 边框颜色为黑色，并加粗 */
+  margin-top: 20px;
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+  box-sizing: border-box; /* 确保内边距和边框在内的总宽度 */
+}
+
+.dashboard-container, .url-input {
+  width: 90%; /* 保持与 main-container 一致 */
+  max-width: 1500px;
+}
+
+
+.cracking-frequency, .cracking-pointer {
+  background-color: #b9b9b9; /* 背景颜色为灰白色 */
+  color: #000000; /* 字体颜色为黑色 */
+  padding: 15px;
+  border: 4px solid #000000; /* 边框颜色为黑色，并加粗 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  image-rendering: pixelated; /* 像素风 */
+  font-weight: bold; /* 字体加粗 */
+  font-size: 16px; /* 调整字体大小 */
+}
+
+.cracking-frequency svg, .cracking-pointer svg {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated; /* 像素风 */
+}
+
+.cracking-frequency rect, .cracking-pointer rect {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated; /* 像素风 */
+}
+
+/* 进度条样式 */
+/* 进度条样式 */
+.progress-bar-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #b9b9b9;
+  padding: 20px;
+  border: 4px solid #000000;
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  color: #000000;
+  image-rendering: pixelated; /* 像素风 */
+  z-index: 1000;
+}
+
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background-color: #e0e0e0;
+  border: 2px solid #000000;
+}
+
+.progress-bar-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #76c7c0;
+  transition: width 0.5s ease;
+}
