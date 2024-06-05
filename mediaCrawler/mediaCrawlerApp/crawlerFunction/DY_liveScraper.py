@@ -15,7 +15,7 @@ chrome_driver_path = r'/Users/kaifan/Library/Application Support/Google/Chrome'
 user_name_queue = queue.Queue(maxsize=100000)  # maxsize是可选参数，用来设置队列可以容纳的最大元素数量，0或负值表示无大小限制
 
 
-limited_time = 18000 #爬取评论的程序每次运行的时间
+limited_time = 40 #爬取评论的程序每次运行的时间
 
 
 
