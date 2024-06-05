@@ -6,8 +6,9 @@ from django.db import transaction
 tikTokUserQueue = None
 user_dict = {}
 results = []
+url = ''
 
-def scrapeTikTokUsers(url):
+def scrapeTikTokUsers():
     get_live_user_name(url)
     tikTokUserQueue = get_user_queue
 
@@ -37,8 +38,13 @@ def findMatchTiktokUser():
         results.append(user_dict[key][1][0])
 def getReuslts():
     return results
+
+def setUrl(inputUrl):
+    url = inputUrl
+
 def emptyData():
     empty_user_queue()
     tikTokUserQueue = None
     user_dict = {}
     results = []
+    url = ''
