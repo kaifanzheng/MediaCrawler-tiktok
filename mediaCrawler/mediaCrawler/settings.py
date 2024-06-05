@@ -86,7 +86,9 @@ DATABASES = {
             'options': '-c search_path=django,public'
         },
         'CONN_MAX_AGE': 0,  # 使用连接池时，设为 0
-        
+        'TEST': {
+            'NAME': 'mediaCrawlerAPP_test',
+        },
     }
 }
 

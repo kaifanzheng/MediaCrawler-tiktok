@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from mediaCrawlerApp.views import start_scrapper,pulse_scrapper,stop_scrapper
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('start_scrapper/', start_scrapper, name='start_scrapper'),
+    path('pulse_scrapper/',pulse_scrapper,name='pulse_scrapper'),
+    path('stop_scrapper/',stop_scrapper,name='stop_scrapper')
 ]

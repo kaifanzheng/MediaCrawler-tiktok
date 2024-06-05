@@ -8,12 +8,14 @@ from selenium.common.exceptions import StaleElementReferenceException, TimeoutEx
 import time
 import queue
 
+
+stopScrapperFlag = 0
 chrome_driver_path = r'/Users/kaifan/Library/Application Support/Google/Chrome'
 # 创建一个先进先出的队列
 user_name_queue = queue.Queue(maxsize=100000)  # maxsize是可选参数，用来设置队列可以容纳的最大元素数量，0或负值表示无大小限制
 
 
-limited_time = 20 #爬取评论的程序每次运行的时间
+limited_time = 18000 #爬取评论的程序每次运行的时间
 
 
 
@@ -36,7 +38,11 @@ def close_popup(driver):
     except TimeoutException:
         print("没有检测到弹窗，继续执行程序。")
 
+def setFlagToStop():
+    stopScrapperFlag = 1
+
 def fetch_comments(driver):
+    stopScrapperFlag = 0
     last_seen_comment_id = None
     start_time = time.time()
 
@@ -44,6 +50,8 @@ def fetch_comments(driver):
         while True:
             current_time = time.time()
             if current_time - start_time > limited_time:
+                break
+            if stopScrapperFlag == 1:
                 break
             comments = driver.find_elements(By.CSS_SELECTOR, "#chatroom > div > div.rXSKGskq > div.h02Ml9ry > div > div > div > div.webcast-chatroom___item-offset > div > div:nth-child(1) > div")
             new_comments = []
@@ -79,6 +87,9 @@ def display_comment(comment):
 #method that project queue        
 def get_user_queue():
     return user_name_queue
+
+def empty_user_queue():
+    user_name_queue = queue.Queue(maxsize=100000)
 
 # 主函数
 def get_live_user_name(live_url):
